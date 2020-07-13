@@ -1,0 +1,173 @@
+import React from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+import { Table, TableContainer, TableBody, TableHead, TableCell, withStyles, TextField } from '@material-ui/core';
+import { TableProps } from './tasksList';
+import { ActionsMenu } from './actionsMenu';
+import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
+
+
+const TasksTableHead = () => {
+    return (
+        <TableHead>
+            <TableRow>
+                <StyledTableCell>
+                </StyledTableCell>
+                <StyledTableCell
+                    key="userName">
+                    User name
+                </StyledTableCell>
+                <StyledTableCell
+                    key="phone">
+                    Phone number
+                </StyledTableCell>
+                <StyledTableCell
+                    key="email">
+                    Email
+                </StyledTableCell>
+                <StyledTableCell
+                    key="createDate">
+                    Create date
+                </StyledTableCell>
+                <StyledTableCell>
+                    Actions
+                </StyledTableCell>
+            </TableRow>
+        </TableHead>
+    );
+}
+
+const StyledTableCell = withStyles((theme: Theme) =>
+    createStyles({
+        head: {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white,
+            textTransform: "capitalize"
+        },
+        body: {
+            fontSize: 14,
+        },
+    }),
+)(TableCell);
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            width: '100%',
+            alignItems: 'center',
+            marginTop: theme.spacing(3)
+        },
+        paper: {
+            width: '100%',
+            minWidth: 750,
+            overflowX: 'auto',
+            marginBottom: theme.spacing(2)
+        },
+        table: {
+            minWidth: 750,
+        },
+        visuallyHidden: {
+            border: 0,
+            clip: 'rect(0 0 0 0)',
+            height: 1,
+            margin: -1,
+            overflow: 'hidden',
+            padding: 0,
+            position: 'absolute',
+            top: 20,
+            width: 1,
+        },
+    }),
+);
+
+const useTextStyles = makeStyles(theme => ({
+    disabledInput: {
+        color: theme.palette.text.primary,
+    },
+    input: {
+        color: theme.palette.text.primary,
+    }
+}));
+
+const TasksTable = (props: TableProps) => {
+
+    const classes = useStyles();
+    const textClasses = useTextStyles();
+    const [selected, setSelected] = React.useState<string[]>([]);
+    const [editable, setEditable] = React.useState<string>();
+    const { tasks } = props;
+    const taskKeys = ['userName', 'phone', 'email', 'createDate'];
+
+    const deleteTask = (data: any) => {
+        props.onDelete([data._id]);
+    }
+
+    const duplicateTask = (data: any) => {
+        props.onDuplicate(data);
+    }
+
+    const saveTask = () => {
+        props.onSave(editable);
+        setEditable('');
+    }
+
+    const editTask = (value: string, key: string, row: any) => {
+        row[key] = value;
+        props.onEdit(row);
+    }
+
+    const setRowEditable = (data: any) => {
+        setEditable(data._id);
+    }
+
+    const isSelected = (id: string) => selected.indexOf(id) !== -1;
+    const isEditable = (id: string) => editable === id;
+
+    
+    return (
+        <div className={classes.root}>
+            <Paper className={classes.paper} >
+                <TableContainer>
+                    <Table
+                        className={classes.table}
+                        aria-labelledby="tableTitle"
+                        size="small"
+                        aria-label="enhanced table">
+                        <TasksTableHead />
+                        <TableBody>
+                            {tasks.map((row, index) => {
+                                const isItemSelected = isSelected(row._id);
+                                const isDisable = !isEditable(row._id);
+                                const rowId = `row-${index}`;
+                                return (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        key={rowId}
+                                        selected={isItemSelected}>
+                                        {taskKeys.map((key, i) =>
+                                            (<TableCell key={`row-${i}`}>
+                                                <TextField onChange={e => editTask(e.target.value, key, row)} value={row[key]} disabled={isDisable} InputProps={{
+                                                    disableUnderline: isDisable,
+                                                    classes: { disabled: textClasses.disabledInput }
+                                                }} />
+                                            </TableCell>
+                                            ))}
+                                        <TableCell>{
+                                            isDisable ? (< ActionsMenu task={row} onDelete={deleteTask}
+                                                onDuplicate={duplicateTask} onEdit={setRowEditable}></ActionsMenu>) : (
+                                                    <DoneTwoToneIcon onClick={saveTask}></DoneTwoToneIcon>)}
+                                        </TableCell>
+                                    </TableRow>);
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        </div >);
+}
+
+export default TasksTable;

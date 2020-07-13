@@ -1,0 +1,9 @@
+.tasks-list {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.home-container {
+    min-height: 80vh;
+    text-align: center;
+}
