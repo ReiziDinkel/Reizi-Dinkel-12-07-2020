@@ -20,17 +20,8 @@ const deleteTask = async id => {
 }
 
 const updateTask = async (data, id) => {
-
     const upsertData = Object.assign({}, data);
     delete upsertData._id;
-
-
-
-    // var upsertData = data.toObject();
-
-    // console.log(req.body.id); // OK
-
-    // delete upsertData._id;
     return await Task.updateOne({ _id: id }, upsertData);
 }
 
