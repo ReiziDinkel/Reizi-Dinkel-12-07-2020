@@ -2,11 +2,11 @@ import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
 import { Table, TableContainer, TableBody, TableHead, TableCell, withStyles, TextField } from '@material-ui/core';
 import { TableProps } from './tasksList';
-import { ActionsMenu } from './actionsMenu';
+import DeleteIcon from '@material-ui/icons/Delete';
 import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 const TasksTableHead = () => {
@@ -95,8 +95,7 @@ const TasksTable = (props: TableProps) => {
 
     const classes = useStyles();
     const textClasses = useTextStyles();
-    const [selected, setSelected] = React.useState<string[]>([]);
-    const [editable, setEditable] = React.useState<string>();
+    const [editableTaskId, setEditableTaskId] = React.useState<string>();
     const { tasks } = props;
     const taskKeys = ['userName', 'phone', 'email', 'createDate'];
 
@@ -104,13 +103,11 @@ const TasksTable = (props: TableProps) => {
         props.onDelete([data._id]);
     }
 
-    const duplicateTask = (data: any) => {
-        props.onDuplicate(data);
-    }
-
     const saveTask = () => {
-        props.onSave(editable);
-        setEditable('');
+        const id = editableTaskId || '';
+        const task = tasks.find((t) => t._id == id);
+        props.onSave(task);
+        setEditableTaskId('');
     }
 
     const editTask = (value: string, key: string, row: any) => {
@@ -119,13 +116,12 @@ const TasksTable = (props: TableProps) => {
     }
 
     const setRowEditable = (data: any) => {
-        setEditable(data._id);
+        setEditableTaskId(data._id);
     }
 
-    const isSelected = (id: string) => selected.indexOf(id) !== -1;
-    const isEditable = (id: string) => editable === id;
+    const isEditable = (id: string) => editableTaskId === id || id == '';
 
-    
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper} >
@@ -138,16 +134,14 @@ const TasksTable = (props: TableProps) => {
                         <TasksTableHead />
                         <TableBody>
                             {tasks.map((row, index) => {
-                                const isItemSelected = isSelected(row._id);
                                 const isDisable = !isEditable(row._id);
                                 const rowId = `row-${index}`;
                                 return (
                                     <TableRow
                                         hover
                                         role="checkbox"
-                                        aria-checked={isItemSelected}
                                         key={rowId}
-                                        selected={isItemSelected}>
+                                    >
                                         {taskKeys.map((key, i) =>
                                             (<TableCell key={`row-${i}`}>
                                                 <TextField onChange={e => editTask(e.target.value, key, row)} value={row[key]} disabled={isDisable} InputProps={{
@@ -156,9 +150,9 @@ const TasksTable = (props: TableProps) => {
                                                 }} />
                                             </TableCell>
                                             ))}
-                                        <TableCell>{
-                                            isDisable ? (< ActionsMenu task={row} onDelete={deleteTask}
-                                                onDuplicate={duplicateTask} onEdit={setRowEditable}></ActionsMenu>) : (
+                                        <TableCell>
+                                            <DeleteIcon onClick={e => deleteTask(row)}></DeleteIcon>{
+                                                isDisable ? (<EditIcon onClick={e => setRowEditable(row)}></EditIcon>) : (
                                                     <DoneTwoToneIcon onClick={saveTask}></DoneTwoToneIcon>)}
                                         </TableCell>
                                     </TableRow>);

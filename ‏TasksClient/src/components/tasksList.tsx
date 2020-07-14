@@ -10,7 +10,6 @@ import * as TaskApi from '../services/TaskService';
 export interface TableProps {
     tasks: any[];
     onDelete: any;
-    onDuplicate: any;
     onEdit: any;
     onSave: any;
 }
@@ -32,7 +31,6 @@ export const TasksList = () => {
         TaskApi.getTasks()
             .then(({ data }) => {
                 setTasks(tasks => [...data]);
-
             }).catch((err) => {
                 console.log(err)
             });
@@ -44,10 +42,19 @@ export const TasksList = () => {
     }
 
     const updateTask = async (task: task) => {
-        await TaskApi.updateTask(task);
+        debugger
+        if (task._id == '') {
+            const newTask = (await TaskApi.createTask(task)).data;
+            setTasks(tasks => [
+                newTask,
+                ...tasks.slice(1)
+            ]);
+        }
+        else await TaskApi.updateTask(task);
     }
 
     const duplicateTask = async (task: task) => {
+        debugger
         TaskApi.createTask(task)
             .then(({ data }) => {
                 const index = tasks.findIndex(p => p._id === task._id);
@@ -62,6 +69,7 @@ export const TasksList = () => {
     }
 
     const editTask = (task: any) => {
+        debugger
         setTasks([...tasks.map((p) => {
             if (p._id === task._id) return task;
             return p;
@@ -89,7 +97,7 @@ export const TasksList = () => {
                         Create task
             </Button>
                     <TasksTable tasks={tasks} onDelete={deleteTask}
-                        onSave={updateTask} onDuplicate={duplicateTask} onEdit={editTask} />
+                        onSave={updateTask} onEdit={editTask} />
                 </div>
             </Grid>
         </Grid>

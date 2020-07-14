@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { Button, Grid, Link } from '@material-ui/core';
 import { user } from '../types/user';
 
-import * as AuthApi from '../services/AuthService';
+import * as AuthApi from '../services/UserService';
 import { useHistory } from 'react-router-dom';
 
 
@@ -38,7 +38,7 @@ export const Login = () => {
     const login = () => {
         AuthApi.login(user)
             .then(({ data }) => {
-                sessionStorage.setItem("user", JSON.stringify(data));
+                sessionStorage.setItem("accessToken", data.accessToken);
                 history.push("/tasks");
             }).catch((err) => {
                 console.log(err)
