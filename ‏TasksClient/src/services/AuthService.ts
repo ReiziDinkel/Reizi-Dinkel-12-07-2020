@@ -1,16 +1,19 @@
 const authHeader = () => {
-    debugger;
     const accessToken = sessionStorage.getItem('accessToken');
-
     if (accessToken) {
-        // for Node.js Express back-end
         return { 'accessToken': accessToken };
     } else {
         return {};
     }
 }
 
+const isAuthenticated = () => {
+    const accessToken = sessionStorage.getItem('accessToken');
+    return accessToken != null;
+}
+
 
 export {
-    authHeader
+    authHeader,
+    isAuthenticated
 };

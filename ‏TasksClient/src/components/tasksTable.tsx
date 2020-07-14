@@ -13,8 +13,6 @@ const TasksTableHead = () => {
     return (
         <TableHead>
             <TableRow>
-                <StyledTableCell>
-                </StyledTableCell>
                 <StyledTableCell
                     key="userName">
                     User name
@@ -27,12 +25,7 @@ const TasksTableHead = () => {
                     key="email">
                     Email
                 </StyledTableCell>
-                <StyledTableCell
-                    key="createDate">
-                    Create date
-                </StyledTableCell>
                 <StyledTableCell>
-                    Actions
                 </StyledTableCell>
             </TableRow>
         </TableHead>
@@ -97,7 +90,7 @@ const TasksTable = (props: TableProps) => {
     const textClasses = useTextStyles();
     const [editableTaskId, setEditableTaskId] = React.useState<string>();
     const { tasks } = props;
-    const taskKeys = ['userName', 'phone', 'email', 'createDate'];
+    const taskKeys = ['userName', 'phone', 'email'];
 
     const deleteTask = (data: any) => {
         props.onDelete([data._id]);
@@ -129,8 +122,7 @@ const TasksTable = (props: TableProps) => {
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
-                        size="small"
-                        aria-label="enhanced table">
+                        size="small">
                         <TasksTableHead />
                         <TableBody>
                             {tasks.map((row, index) => {
@@ -140,8 +132,7 @@ const TasksTable = (props: TableProps) => {
                                     <TableRow
                                         hover
                                         role="checkbox"
-                                        key={rowId}
-                                    >
+                                        key={rowId}>
                                         {taskKeys.map((key, i) =>
                                             (<TableCell key={`row-${i}`}>
                                                 <TextField onChange={e => editTask(e.target.value, key, row)} value={row[key]} disabled={isDisable} InputProps={{
@@ -151,8 +142,8 @@ const TasksTable = (props: TableProps) => {
                                             </TableCell>
                                             ))}
                                         <TableCell>
-                                            <DeleteIcon onClick={e => deleteTask(row)}></DeleteIcon>{
-                                                isDisable ? (<EditIcon onClick={e => setRowEditable(row)}></EditIcon>) : (
+                                            {isDisable ? (<div><DeleteIcon onClick={e => deleteTask(row)}></DeleteIcon>
+                                                <EditIcon onClick={e => setRowEditable(row)}></EditIcon></div>) : (
                                                     <DoneTwoToneIcon onClick={saveTask}></DoneTwoToneIcon>)}
                                         </TableCell>
                                     </TableRow>);

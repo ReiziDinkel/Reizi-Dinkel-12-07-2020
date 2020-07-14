@@ -37,12 +37,11 @@ export const TasksList = () => {
     }
 
     const deleteTask = async (id: string) => {
-        setTasks(tasks => [...tasks.filter(({ _id }) => _id !== id)]);
+        setTasks(tasks => [...tasks.filter(({ _id }) => _id != id)]);
         await TaskApi.deleteTasks(id);
     }
 
-    const updateTask = async (task: task) => {
-        debugger
+    const saveTask = async (task: task) => {
         if (task._id == '') {
             const newTask = (await TaskApi.createTask(task)).data;
             setTasks(tasks => [
@@ -53,23 +52,7 @@ export const TasksList = () => {
         else await TaskApi.updateTask(task);
     }
 
-    const duplicateTask = async (task: task) => {
-        debugger
-        TaskApi.createTask(task)
-            .then(({ data }) => {
-                const index = tasks.findIndex(p => p._id === task._id);
-                setTasks(tasks => [
-                    ...tasks.slice(0, index),
-                    data,
-                    ...tasks.slice(index)
-                ]);
-            }).catch((err) => {
-                console.log(err)
-            });
-    }
-
     const editTask = (task: any) => {
-        debugger
         setTasks([...tasks.map((p) => {
             if (p._id === task._id) return task;
             return p;
@@ -97,7 +80,7 @@ export const TasksList = () => {
                         Create task
             </Button>
                     <TasksTable tasks={tasks} onDelete={deleteTask}
-                        onSave={updateTask} onEdit={editTask} />
+                        onSave={saveTask} onEdit={editTask} />
                 </div>
             </Grid>
         </Grid>

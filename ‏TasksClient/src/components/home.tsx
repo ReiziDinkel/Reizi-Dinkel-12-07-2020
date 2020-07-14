@@ -1,33 +1,43 @@
 import React from 'react'; // let's also import Component
 import { Login } from './login';
-import { Grid, createMuiTheme } from '@material-ui/core';
+import { Grid, createMuiTheme, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
+import { TasksList } from './tasksList';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       color: theme.palette.secondary.main
     },
+    marginTop: theme.spacing(5)
   },
 }));
 
 export const Home = () => {
   const classes = useStyles();
+  const history = useHistory();
+
+
+  const signOut = () => {
+    sessionStorage.clear();
+    history.push("/login");
+  }
 
   return <Grid
     container
-    spacing={0}
+    spacing={5}
     direction="column"
-    alignItems="center"
     justify="center"
-    className="home-container"
-  >
-    <Grid item xs={12} className={classes.root}>
-      <h1>Welcome to propit!!</h1>
-      <h4>please login to start manage your tasks</h4>
+    className={classes.root}>
+    <Grid item xs={12} alignItems="center">
+      <Button variant="contained" color="primary" onClick={signOut}>
+        Sign out
+            </Button>
     </Grid>
     <Grid item xs={12}>
-      <Login />
+      <TasksList />
     </Grid>
   </Grid>
 }

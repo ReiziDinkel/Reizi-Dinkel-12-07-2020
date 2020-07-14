@@ -10,14 +10,18 @@ import { useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
+    root: {
+        '& > *': {
+            color: theme.palette.secondary.main
+        },
+    }, paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -46,46 +50,60 @@ export const Login = () => {
     }
 
     return (
-        <div className={classes.form}>
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={user.email}
-                onChange={e => setUser({ ...user, email: e.target.value })}
-            />
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                value={user.password}
-                onChange={e => setUser({ ...user, password: e.target.value })}
-            />
-            <Button
-                onClick={login}
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}>
-                Sign In
-          </Button>
-            <Grid container>
-                <Grid item>
-                    <Link href="signup" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                    </Link>
-                </Grid>
+        <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+            className="home-container">
+            <Grid item xs={6} className={classes.root}>
+                <h1>Welcome to propit!</h1>
+                <h4>please login to start manage your tasks</h4>
             </Grid>
-        </div>
+            <Grid item xs={6}>
+                <div className={classes.form}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        value={user.email}
+                        onChange={e => setUser({ ...user, email: e.target.value })} />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        value={user.password}
+                        onChange={e => setUser({ ...user, password: e.target.value })}
+                    />
+                    <Button
+                        onClick={login}
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}>
+                        Sign In
+          </Button>
+                    <Grid container>
+                        <Grid item>
+                            <Link href="signup" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </div>
+            </Grid>
+        </Grid >
+
     );
 }
