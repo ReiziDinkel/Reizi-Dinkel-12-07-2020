@@ -8,7 +8,7 @@ gives the possibility to create, view, and update tasks, according to user detai
  
  ## Demo 
  
- See [demo](https://reizi-dinkel-12-07-2020.herokuapp.com/) :https://reizi-dinkel-12-07-2020.herokuapp.com/
+ See [demo](https://reizi-dinkel-12-07-2020.herokuapp.com/)
  
 ## System structure 
 The system is using The most advanced and efficient technologies. keeping of high level in code & UI.
